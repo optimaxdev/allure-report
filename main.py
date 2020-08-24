@@ -32,7 +32,7 @@ def report_files(results_directory):
     for file in files:
         result = {}
 
-        file_path = results_directory + "/" + file
+        file_path = f'{results_directory}/{file}'
 
         if os.path.isfile(file_path):
             try:
@@ -81,7 +81,7 @@ def generate_report(allure_server, project_id, execution_name, execution_from, r
 
 
 def find_allure_comments(token, repo, pr_number, regexp):
-    headers = {'Authorization': 'Bearer ' + token}
+    headers = {'Authorization': f'token {token}'}
 
     response = requests.get(
         f'{GITHUB_API_BASE_URL}/repos/{repo}/issues/{pr_number}/comments',
