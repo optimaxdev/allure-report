@@ -6,7 +6,6 @@ import json
 import base64
 
 GITHUB_API_BASE_URL = 'https://api.github.com'
-ALLURE_SERVER_URL = 'http://allure.gusadev.com'
 
 
 def escape(v: str) -> str:
@@ -57,13 +56,13 @@ def report_files(results_directory):
     return json_request_body
 
 
-def generate_report(project_id, execution_name, execution_from, report_body):
+def generate_report(allure_server, project_id, execution_name, execution_from, report_body):
     execution_type = 'github-actions'
     headers = {'Content-type': 'application/json'}
 
     print("Uploading test results")
     send_response = requests.post(
-        f'{ALLURE_SERVER_URL}/allure-docker-service/send-results?project_id={project_id}',
+        f'{allure_server}/allure-docker-service/send-results?project_id={project_id}',
         headers=headers,
         data=report_body,
     )
@@ -72,7 +71,7 @@ def generate_report(project_id, execution_name, execution_from, report_body):
 
     print("Generating Allure report")
     generate_response = requests.get(
-        f'{ALLURE_SERVER_URL}/allure-docker-service/generate-report?project_id={project_id}&execution_name={execution_name}&execution_from={execution_from}&execution_type={execution_type}',
+        f'{allure_server}/allure-docker-service/generate-report?project_id={project_id}&execution_name={execution_name}&execution_from={execution_from}&execution_type={execution_type}',
         headers=headers,
         data=report_body,
     )
@@ -127,6 +126,7 @@ def post_allure_comment(token, repo, pr_number, body, comment_ids, report_url):
 
 def main():
     token = get_action_input('token')
+    allure_server = get_action_input('allure_server')
     repo = os.environ['GITHUB_REPOSITORY']
     body = get_action_input('body')
     pr_number = get_action_input('pr_number')
@@ -137,10 +137,13 @@ def main():
 
     report_body = report_files(results_directory)
     report_url = generate_report(
-        project_id, execution_name, execution_from, report_body)
+        allure_server, project_id, execution_name, execution_from, report_body)
     comment_ids = find_allure_comments(token, repo, pr_number, body)
     post_allure_comment(token, repo, pr_number, body, comment_ids, report_url)
 
 
 if __name__ == '__main__':
     main()
+
+#TODO Function to extract data from $GITHUB_EVENT_PATH json
+#TODO Error handling in all functions

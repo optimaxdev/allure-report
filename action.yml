@@ -12,6 +12,9 @@ inputs:
   token:
     required: true
     description: Github token
+  allure_server:
+    required: true
+    description: Allure server URL
   body:
     required: true
     description: Comment message body
@@ -32,6 +35,7 @@ runs:
   image: 'Dockerfile'
   args:
     - ${{ inputs.token }}
+    - ${{ inputs.allure_server }}
     - ${{ inputs.body }}
     - ${{ inputs.pr_number }}
     - ${{ inputs.project_id }}
