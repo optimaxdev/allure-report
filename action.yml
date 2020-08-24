@@ -1,0 +1,43 @@
+# action name
+name: 'allure-report'
+
+# action author
+author: 'Ilya Kunafin <kunafin@optimax.dev>'
+
+# action description
+description: 'Generates Allure report based on tests results, posting PR comment with report link.'
+
+# action input values
+inputs:
+  token:
+    required: true
+    description: Github token
+  body:
+    required: true
+    description: Comment message body
+  pr_number:
+    required: true
+    description: Number of PR to comment
+  project_id:
+    required: true
+    description: Project id to associate report with (e.g. gusa-desktop-integrations)
+  results_directory:
+    required: true
+    description: Directory with allure-results xml files (e.g. __specs__/allure-results)
+  
+
+# action docker runner 
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.token }}
+    - ${{ inputs.body }}
+    - ${{ inputs.pr_number }}
+    - ${{ inputs.project_id }}
+    - ${{ inputs.results_directory }}
+
+# branding
+branding:
+  icon: eye
+  color: blue
