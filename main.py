@@ -67,7 +67,7 @@ def generate_report(allure_server, project_id, execution_name, execution_from, r
         data=report_body,
     )
     print(f'Response code: {send_response.status_code}')
-    print(json.loads(send_response.content['meta_data']['message']))
+    print(json.loads(send_response.content)['meta_data']['message'])
 
     print("Generating Allure report")
     generate_response = requests.get(
@@ -75,7 +75,7 @@ def generate_report(allure_server, project_id, execution_name, execution_from, r
         headers=headers,
         data=report_body,
     )
-    report_url = json.loads(generate_response.content['data']['report_url'])
+    report_url = json.loads(generate_response.content)['data']['report_url']
     print(f'Response code: {generate_response.status_code}')
     return report_url
 
@@ -132,10 +132,11 @@ def main():
     pr_number = get_action_input('pr_number')
     project_id = get_action_input('project_id')
     results_directory = get_action_input('results_directory')
+    results_directory_full_path = f'github/workspace/{results_directory}'
     execution_name = pr_number
     execution_from = f'https://github.com/{repo}/pull/{pr_number}'
 
-    report_body = report_files(results_directory)
+    report_body = report_files(results_directory_full_path)
     report_url = generate_report(
         allure_server, project_id, execution_name, execution_from, report_body)
     comment_ids = find_allure_comments(token, repo, pr_number, body)
@@ -145,5 +146,5 @@ def main():
 if __name__ == '__main__':
     main()
 
-#TODO Function to extract data from $GITHUB_EVENT_PATH json
-#TODO Error handling in all functions
+# TODO Function for extraction data from $GITHUB_EVENT_PATH json
+# TODO Error handling in all functions
