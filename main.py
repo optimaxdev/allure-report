@@ -97,18 +97,6 @@ def post_allure_comment(token, repo, pr_number, body, comment_ids, report_url):
     headers = {'Authorization': f'token {token}'}
     data = {"body": f"{body}: {report_url}"}
 
-    while len(comment_ids) > 1:
-        print('Purging unnecessary Allure report links')
-        for comment in comment_ids:
-            print(f'Purging commend with ID: {comment}')
-            response = requests.delete(
-                f'{GITHUB_API_BASE_URL}/repos/{repo}/issues/comments/{comment}',
-                headers=headers,
-                data=json.dumps(data))
-            print(f'Response code: {response.status_code}')
-            comment_ids.remove(comment)
-        break
-
     if len(comment_ids) == 0:
         print('Posting PR comment with Allure report link')
         response = requests.post(f'{GITHUB_API_BASE_URL}/repos/{repo}/issues/{pr_number}/comments',
