@@ -121,7 +121,7 @@ def main():
     project_id = get_action_input('project_id')
     results_directory = get_action_input('results_directory')
     results_directory_full_path = f'github/workspace/{results_directory}'
-    execution_name = pr_number
+    execution_name = f'PR-{pr_number}'
     execution_from = f'https://github.com/{repo}/pull/{pr_number}'
 
     report_body = report_files(results_directory_full_path)
