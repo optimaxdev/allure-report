@@ -80,6 +80,17 @@ def generate_report(allure_server, project_id, execution_name, execution_from, r
     return report_url
 
 
+def clean_allure_results(allure_server, project_id):
+    print('Purging result files')
+    clean_response = requests.get(
+        f'{allure_server}/allure-docker-service/clean-results?project_id={project_id}'
+    )
+
+    message = json.loads(clean_response.content)['meta_data']['message']
+    print(message)
+    return message
+
+
 def find_allure_comments(token, repo, pr_number, regexp):
     headers = {'Authorization': f'token {token}'}
 
@@ -129,6 +140,10 @@ def main():
         allure_server, project_id, execution_name, execution_from, report_body)
     comment_ids = find_allure_comments(token, repo, pr_number, body)
     post_allure_comment(token, repo, pr_number, body, comment_ids, report_url)
+    
+    results_cleaned = clean_allure_results(allure_server, project_id)
+    while re.match('Results successfully cleaned', results_cleaned) is not None:
+        clean_allure_results(allure_server, project_id)
 
 
 if __name__ == '__main__':
