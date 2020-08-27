@@ -142,7 +142,7 @@ def main():
     post_allure_comment(token, repo, pr_number, body, comment_ids, report_url)
     
     results_cleaned = clean_allure_results(allure_server, project_id)
-    while re.match('Results successfully cleaned', results_cleaned) is not None:
+    while re.match('Results successfully cleaned', results_cleaned) is None:
         clean_allure_results(allure_server, project_id)
 
 
