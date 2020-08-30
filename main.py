@@ -143,7 +143,7 @@ def main():
     
     results_cleaned = clean_allure_results(allure_server, project_id)
     while re.match('Results successfully cleaned', results_cleaned) is None:
-        clean_allure_results(allure_server, project_id)
+        results_cleaned = clean_allure_results(allure_server, project_id)
 
 
 if __name__ == '__main__':
