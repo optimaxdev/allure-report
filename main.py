@@ -75,6 +75,7 @@ def generate_report(allure_server, project_id, execution_name, execution_from, r
         headers=headers,
         data=report_body,
     )
+    print(f'Debugging weird errors on generate step:\n{generate_response.content}')
     report_url = json.loads(generate_response.content)['data']['report_url']
     print(f'Response code: {generate_response.status_code}')
     return report_url
@@ -140,7 +141,7 @@ def main():
         allure_server, project_id, execution_name, execution_from, report_body)
     comment_ids = find_allure_comments(token, repo, pr_number, body)
     post_allure_comment(token, repo, pr_number, body, comment_ids, report_url)
-    
+
     results_cleaned = clean_allure_results(allure_server, project_id)
     while re.match('Results successfully cleaned', results_cleaned) is None:
         results_cleaned = clean_allure_results(allure_server, project_id)
