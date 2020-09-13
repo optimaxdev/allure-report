@@ -53,7 +53,7 @@ def report_files(results_directory):
         "results": results
     }
     json_request_body = json.dumps(request_body)
-    print(f'Debugging empty reports:\n{json_request_body}')
+    print(f'Debugging empty reports:\n{files}')
     return json_request_body
 
 
